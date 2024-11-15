@@ -82,6 +82,6 @@ jobs:
       - env:
           TF_ACC: "1"
           TEST_DEVELOPER_ID: ${{ secrets.TEST_DEVELOPER_ID }}
-          TEST_DEVELOPER_KEY: ${{ secrets.TEST_DEVELOPER_KEY }}
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
         run: go test -v -cover ./internal/provider/
         timeout-minutes: 10
