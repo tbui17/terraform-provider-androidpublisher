@@ -1,3 +1,3 @@
-provider "scaffolding" {
+provider "androidpublisher" {
   # example configuration here
 }
