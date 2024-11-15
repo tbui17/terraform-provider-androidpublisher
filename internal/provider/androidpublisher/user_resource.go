@@ -34,7 +34,7 @@ func (m *UserResourceModel) GetParent() string {
 // Ensure provider defined types fully satisfy framework interfaces.
 var _ resource.Resource = &UserResource{}
 
-// UserResource defines the resource implementation
+// UserResource defines the resource implementation.
 type UserResource struct {
 	client                  *http.Client
 	androidPublisherService *androidpublisher.Service
@@ -44,7 +44,7 @@ func (r *UserResource) Metadata(ctx context.Context, req resource.MetadataReques
 	resp.TypeName = req.ProviderTypeName + "_user"
 }
 
-// UserResourceModel describes the resource data model
+// UserResourceModel describes the resource data model.
 type UserResourceModel struct {
 	AccessState                 types.String `tfsdk:"access_state"`
 	DeveloperID                 types.String `tfsdk:"developer_id"`

@@ -40,7 +40,7 @@ type UserData struct {
 	DeveloperAccountPermissions types.List   `tfsdk:"developer_account_permissions"`
 }
 
-// UserDataModel describes the resource data model
+// UserDataModel describes the resource data model.
 type UserDataModel struct {
 	DeveloperID types.String `tfsdk:"developer_id"`
 	Value       []UserData   `tfsdk:"value"`
@@ -149,7 +149,7 @@ func (d *UserDataSource) Configure(ctx context.Context, req datasource.Configure
 func (d *UserDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var data UserDataModel
 
-	// Read Terraform configuration data into the model
+	// Read Terraform configuration data into the model.
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	if resp.Diagnostics.HasError() {
@@ -170,11 +170,11 @@ func (d *UserDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 
 	data.Value = userDataEntries
 
-	// Write logs using the tflog package
-	// Documentation: https://terraform.io/plugin/log
+	// Write logs using the tflog package.
+	// Documentation: https://terraform.io/plugin/log.
 	tflog.Trace(ctx, "read a data source")
 
-	// Save data into Terraform state
+	// Save data into Terraform state.
 	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
 }
 

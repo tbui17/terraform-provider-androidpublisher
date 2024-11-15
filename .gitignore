@@ -24,7 +24,7 @@ website/node_modules
 .idea
 *.iml
 *.test
-
+.*
 website/vendor
 
 # Test exclusions
