@@ -81,5 +81,7 @@ jobs:
       - run: go mod download
       - env:
           TF_ACC: "1"
+          TEST_DEVELOPER_ID: ${{ secrets.TEST_DEVELOPER_ID }}
+          TEST_DEVELOPER_KEY: ${{ secrets.TEST_DEVELOPER_KEY }}
         run: go test -v -cover ./internal/provider/
         timeout-minutes: 10
