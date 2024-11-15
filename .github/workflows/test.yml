@@ -79,6 +79,10 @@ jobs:
           terraform_version: ${{ matrix.terraform }}
           terraform_wrapper: false
       - run: go mod download
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: ${{secrets.GOOGLE_PROJECT_ID}}
+          workload_identity_provider: ${{secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER}}
       - env:
           TF_ACC: "1"
           TEST_DEVELOPER_ID: ${{ secrets.TEST_DEVELOPER_ID }}
