@@ -13,7 +13,7 @@ Interacts with Google Play Developer APIs. https://developers.google.com/android
 ## Example Usage
 
 ```terraform
-provider "scaffolding" {
+provider "androidpublisher" {
   # example configuration here
 }
 ```
