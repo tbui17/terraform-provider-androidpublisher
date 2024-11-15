@@ -6,7 +6,7 @@ package main
 import (
 	"context"
 	"flag"
-	"github.com/tbui17/terraform-provider-androidpublisher/internal/provider/androidpublisher"
+	"github.com/tbui17/terraform-provider-androidpublisher/internal/provider"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
@@ -35,7 +35,7 @@ func main() {
 		Debug:   debug,
 	}
 
-	err := providerserver.Serve(context.Background(), androidpublisher.New(version), opts)
+	err := providerserver.Serve(context.Background(), provider.New(version), opts)
 
 	if err != nil {
 		log.Fatal(err.Error())
