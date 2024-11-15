@@ -3,12 +3,12 @@
 page_title: "androidpublisher_user Resource - androidpublisher"
 subcategory: ""
 description: |-
-  Manages a Google Play Android Publisher User
+  Manages a Google Play Android Publisher User resource https://developers.google.com/android-publisher/api-ref/rest/v3/users
 ---
 
 # androidpublisher_user (Resource)
 
-Manages a Google Play Android Publisher User
+Manages a Google Play Android Publisher User resource https://developers.google.com/android-publisher/api-ref/rest/v3/users
 
 ## Example Usage
 

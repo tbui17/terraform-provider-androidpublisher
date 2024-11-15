@@ -3,12 +3,12 @@
 page_title: "androidpublisher_user Data Source - androidpublisher"
 subcategory: ""
 description: |-
-  Retrieves a list of users associated with a developer account.
+  Retrieves a list of users associated with a developer account. Maps to the https://developers.google.com/android-publisher/api-ref/rest/v3/users/list endpoint.
 ---
 
 # androidpublisher_user (Data Source)
 
-Retrieves a list of users associated with a developer account.
+Retrieves a list of users associated with a developer account. Maps to the https://developers.google.com/android-publisher/api-ref/rest/v3/users/list endpoint.
 
 ## Example Usage
 
