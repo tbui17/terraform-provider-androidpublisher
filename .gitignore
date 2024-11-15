@@ -3,6 +3,7 @@
 .DS_Store
 example.tf
 terraform.tfplan
+.env
 terraform.tfstate
 bin/
 dist/
@@ -23,7 +24,6 @@ website/node_modules
 .idea
 *.iml
 *.test
-*.iml
 
 website/vendor
 
