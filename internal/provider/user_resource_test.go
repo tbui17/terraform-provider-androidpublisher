@@ -6,30 +6,13 @@ package provider
 import (
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"os"
 	"testing"
 )
 
-type EnvironmentVariables struct {
-	TestEmail       string
-	TestDeveloperId string
-}
-
-func NewEnvironmentVariables() EnvironmentVariables {
-	res := EnvironmentVariables{
-		TestEmail:       os.Getenv("TEST_EMAIL"),
-		TestDeveloperId: os.Getenv("TEST_DEVELOPER_ID"),
-	}
-
-	if res.TestEmail == "" || res.TestDeveloperId == "" {
-		panic("Please set TEST_EMAIL and TEST_DEVELOPER_ID environment variables")
-	}
-	return res
-}
-
 func TestAccUserResource(t *testing.T) {
-	env := NewEnvironmentVariables()
+
 	createConfig := fmt.Sprintf(`
+
 resource "androidpublisher_user" "test" {
   email = %q
   developer_id = %q
@@ -51,6 +34,7 @@ resource "androidpublisher_user" "test" {
 		Steps: []resource.TestStep{
 			// Create and Read testing
 			{
+
 				Config: createConfig,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("androidpublisher_user.test", "email", env.TestEmail),

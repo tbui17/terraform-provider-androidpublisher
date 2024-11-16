@@ -11,13 +11,34 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
 
-func TestAccUserDataSource(t *testing.T) {
-	env := NewEnvironmentVariables()
-	config := fmt.Sprintf(`
+var env = NewEnvironmentVariables()
+
+var config = fmt.Sprintf(`
 data "androidpublisher_user" "test" {
   developer_id = %q
 }
 `, env.TestDeveloperId)
+
+func TestAccUserDataSource(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps: []resource.TestStep{
+			// Read testing
+			{
+				Config: config,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("data.androidpublisher_user.test", "developer_id", env.TestDeveloperId),
+					resource.TestCheckResourceAttrWith("data.androidpublisher_user.test", "value.#", testCheckResourceCountNotEmpty),
+				),
+			},
+		},
+	})
+}
+
+func TestAccUserDataSourceWithJsonAuth(t *testing.T) {
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

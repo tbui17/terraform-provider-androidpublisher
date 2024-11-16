@@ -5,6 +5,7 @@ package provider
 
 import (
 	"context"
+	"google.golang.org/api/androidpublisher/v3"
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -29,6 +30,11 @@ type GoogleProvider struct {
 type GoogleProviderModel struct {
 }
 
+type GoogleProviderContext struct {
+	Client                  *http.Client
+	AndroidPublisherService *androidpublisher.Service
+}
+
 func (p *GoogleProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "androidpublisher"
 	resp.Version = p.version
@@ -37,7 +43,6 @@ func (p *GoogleProvider) Metadata(ctx context.Context, req provider.MetadataRequ
 func (p *GoogleProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		MarkdownDescription: "Interacts with Google Play Developer APIs. https://developers.google.com/android-publisher",
-		Attributes:          map[string]schema.Attribute{},
 	}
 }
 
@@ -50,13 +55,20 @@ func (p *GoogleProvider) Configure(ctx context.Context, req provider.ConfigureRe
 		return
 	}
 
-	// Configuration values are now available.
-	// if data.Endpoint.IsNull() { /* ... */ }
+	service, err := androidpublisher.NewService(ctx)
+	if err != nil {
+		resp.Diagnostics.AddError("error creating Android Publisher service: %s", err.Error())
+		return
+	}
 
-	// Example client configuration for data sources and resources
-	client := http.DefaultClient
-	resp.DataSourceData = client
-	resp.ResourceData = client
+	providerContext := &GoogleProviderContext{
+		Client:                  http.DefaultClient,
+		AndroidPublisherService: service,
+	}
+
+	resp.DataSourceData = providerContext
+	resp.ResourceData = providerContext
+
 }
 
 func (p *GoogleProvider) Resources(ctx context.Context) []func() resource.Resource {

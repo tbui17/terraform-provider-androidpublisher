@@ -8,9 +8,7 @@ import (
 	"fmt"
 	"github.com/tbui17/terraform-provider-androidpublisher/internal/grant"
 	"github.com/tbui17/terraform-provider-androidpublisher/internal/lib"
-
 	"google.golang.org/api/androidpublisher/v3"
-	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -27,8 +25,7 @@ func NewUserDataSource() datasource.DataSource {
 
 // UserDataSource defines the data source implementation.
 type UserDataSource struct {
-	client                  *http.Client
-	androidPublisherService *androidpublisher.Service
+	*GoogleProviderContext
 }
 
 type UserData struct {
@@ -126,7 +123,7 @@ func (d *UserDataSource) Configure(ctx context.Context, req datasource.Configure
 		return
 	}
 
-	client, ok := req.ProviderData.(*http.Client)
+	gCtx, ok := req.ProviderData.(*GoogleProviderContext)
 
 	if !ok {
 		resp.Diagnostics.AddError(
@@ -137,13 +134,7 @@ func (d *UserDataSource) Configure(ctx context.Context, req datasource.Configure
 		return
 	}
 
-	d.client = client
-	service, err := androidpublisher.NewService(ctx)
-	if err != nil {
-		resp.Diagnostics.AddError("Failed to create Android Publisher service", err.Error())
-		return
-	}
-	d.androidPublisherService = service
+	d.GoogleProviderContext = gCtx
 }
 
 func (d *UserDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -156,7 +147,7 @@ func (d *UserDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		return
 	}
 
-	request := d.androidPublisherService.Users.List(data.GetDeveloperIdFragment())
+	request := d.AndroidPublisherService.Users.List(data.GetDeveloperIdFragment())
 	usersResponse, err := request.PageSize(-1).Do()
 	if err != nil {
 		resp.Diagnostics.AddError("Failed to list users", err.Error())

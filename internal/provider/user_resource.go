@@ -16,7 +16,6 @@ import (
 	"github.com/tbui17/terraform-provider-androidpublisher/internal/lib"
 
 	"google.golang.org/api/androidpublisher/v3"
-	"net/http"
 )
 
 func (m *UserResourceModel) SetFromUser(ctx context.Context, user androidpublisher.User) {
@@ -36,8 +35,7 @@ var _ resource.Resource = &UserResource{}
 
 // UserResource defines the resource implementation.
 type UserResource struct {
-	client                  *http.Client
-	androidPublisherService *androidpublisher.Service
+	*GoogleProviderContext
 }
 
 func (r *UserResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -129,7 +127,7 @@ func (r *UserResource) Configure(ctx context.Context, req resource.ConfigureRequ
 		return
 	}
 
-	client, ok := req.ProviderData.(*http.Client)
+	gCtx, ok := req.ProviderData.(*GoogleProviderContext)
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Resource Configure Type",
@@ -138,17 +136,7 @@ func (r *UserResource) Configure(ctx context.Context, req resource.ConfigureRequ
 		return
 	}
 
-	service, err := androidpublisher.NewService(ctx)
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Error creating Android Publisher client",
-			fmt.Sprintf("Unable to create Android Publisher client: %v", err),
-		)
-		return
-	}
-
-	r.androidPublisherService = service
-	r.client = client
+	r.GoogleProviderContext = gCtx
 
 }
 
@@ -175,7 +163,7 @@ func (r *UserResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 	parent := data.GetParent()
 
-	request := r.androidPublisherService.Users.Create(parent, user)
+	request := r.AndroidPublisherService.Users.Create(parent, user)
 
 	usr, err := request.Do()
 	if err != nil {
@@ -213,7 +201,7 @@ func (r *UserResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 }
 
 func (r *UserResource) GetUser(data UserResourceModel) (*androidpublisher.User, error) {
-	request := r.androidPublisherService.Users.List(data.GetParent()).PageSize(-1)
+	request := r.AndroidPublisherService.Users.List(data.GetParent()).PageSize(-1)
 
 	response, err := request.Do()
 	if err != nil {
@@ -254,7 +242,7 @@ func (r *UserResource) Update(ctx context.Context, req resource.UpdateRequest, r
 
 	userName := lib.GetName(data.Email.ValueString(), data.DeveloperID.ValueString())
 	updateFields := "developerAccountPermissions,expirationTime"
-	request := r.androidPublisherService.Users.Patch(userName, user).UpdateMask(updateFields)
+	request := r.AndroidPublisherService.Users.Patch(userName, user).UpdateMask(updateFields)
 	usr, err := request.Do()
 	if err != nil {
 		resp.Diagnostics.AddError("Error updating user", fmt.Sprintf("Unable to update user: %v", err))
@@ -274,7 +262,7 @@ func (r *UserResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 		return
 	}
 
-	err := r.androidPublisherService.Users.Delete(data.Name.ValueString()).Do()
+	err := r.AndroidPublisherService.Users.Delete(data.Name.ValueString()).Do()
 	if err != nil {
 		resp.Diagnostics.AddError("Error deleting user", fmt.Sprintf("Unable to delete user: %v", err))
 		return
